@@ -48,9 +48,20 @@ EOF
 		exit
 	fi
 	UPDATEIP=${PATHS[2]}
+elif valid_mac "${PATHS[2]}"
+then
+    DHCPIP=$(get_leased_ip_from_mac "${PATHS[2]}")
+    if ! valid_ip "$DHCPIP"
+    then
+		cat <<EOF
+{"status": 0, "error": "no dhcp lease entry for a given mac address"}
+EOF
+		exit
+    fi
+	UPDATEIP=$DHCPIP 
 else
 	cat <<EOF
-{"status": 0, "error": "invalid ip address"}
+{"status": 0, "error": "invalid ip or mac address"}
 EOF
 	exit
 fi

@@ -162,6 +162,24 @@ valid_ip() {
     return $stat
 }
 
+valid_mac() {
+	# <mac>
+    local  mac=$1
+    local  stat=1
+
+    if [[ $mac =~ ^([0-9a-fA-F]{2}([:-]|$)){6}$ ]]; then
+        stat=0
+    fi
+    return $stat
+}
+
+get_leased_ip_from_mac() {
+	# <mac>
+    cat $DHCP_LEASES | grep $1 | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
+}
+
+
+
 valid_profile() {
 	# <profile>
 	for i in "${!PROFILE[@]}"
